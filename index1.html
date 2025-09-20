@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSys AI - Parent Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .nav-item.active { background: #1e40af; color: white; }
+        .mobile-nav-item.active { color: #1e40af; }
+        .notification-item.unread { background: rgba(30, 64, 175, 0.05); border-left: 4px solid #1e40af; }
+        .child-card.active { border-color: #1e40af; background: rgba(30, 64, 175, 0.05); }
+        .accordion-content { display: none; }
+        .accordion-content.active { display: block; }
+        .progress-bar { background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-fill { background: #10b981; height: 100%; transition: width 0.3s ease; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Desktop Sidebar -->
+    <nav class="fixed left-0 top-0 w-72 h-full bg-white border-r border-gray-200 p-6 z-50 hidden lg:block overflow-y-auto">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-blue-600 mb-2">EduSys AI</h2>
+            <p class="text-gray-600 text-sm">Parent Portal</p>
+        </div>
+        
+        <div class="space-y-2">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors active" data-page="overview">
+                <i data-lucide="home"></i>
+                <span>Overview / Tổng quan</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="family">
+                <i data-lucide="users"></i>
+                <span>Family / Gia đình</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="learning">
+                <i data-lucide="book-open"></i>
+                <span>Learning / Học tập</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="schedule">
+                <i data-lucide="calendar"></i>
+                <span>Schedule / Lịch học</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="notifications">
+                <i data-lucide="bell"></i>
+                <span>Notifications / Thông báo</span>
+            </a>
+        </div>
+        
+        <div class="mt-auto pt-8 border-t border-gray-200">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">MN</div>
+                <div>
+                    <div class="font-semibold">Mai Nguyen</div>
+                    <div class="text-sm text-gray-600">Parent</div>
+                </div>
+            </div>
+            <button class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                <i data-lucide="log-out"></i>
+                Sign Out
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-50 lg:hidden">
+        <div class="flex justify-around">
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600 active" data-page="overview">
+                <i data-lucide="home"></i>
+                <span class="text-xs">Overview</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600" data-page="family">
+                <i data-lucide="users"></i>
+                <span class="text-xs">Family</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600" data-page="learning">
+                <i data-lucide="book-open"></i>
+                <span class="text-xs">Learning</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600" data-page="schedule">
+                <i data-lucide="calendar"></i>
+                <span class="text-xs">Schedule</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600" data-page="notifications">
+                <i data-lucide="bell"></i>
+                <span class="text-xs">Notifications</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72 p-4 lg:p-8 pb-20 lg:pb-8">
+        <!-- Overview Page -->
+        <div id="overview" class="page active">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, Mai! / Chào mừng trở lại!</h1>
+                <p class="text-gray-600">Here's what's happening with Emma's education</p>
+            </div>
+
+            <!-- Alerts -->
+            <div class="space-y-4 mb-8">
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="alert-triangle" class="text-amber-600"></i>
+                        <div>
+                            <strong class="text-amber-800">Upcoming Exam:</strong>
+                            <span class="text-amber-700">Emma has a Physics exam on December 22nd.</span>
+                            <a href="#" class="text-blue-600 underline ml-2">View study materials</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="alert-circle" class="text-red-600"></i>
+                            <div>
+                                <strong class="text-red-800">Payment Due:</strong>
+                                <span class="text-red-700">Invoice #INV-2024-12-001 ($450) is due in 2 days.</span>
+                            </div>
+                        </div>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Pay Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2">92%</div>
+                    <div class="text-gray-600 text-sm">Progress / Tiến độ</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
+                    <div class="text-3xl font-bold text-blue-600 mb-2">95%</div>
+                    <div class="text-gray-600 text-sm">Attendance / Điểm danh</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-2">2</div>
+                    <div class="text-gray-600 text-sm">Open Invoices / HĐ chưa thanh toán</div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 text-center">
+                    <div class="text-3xl font-bold text-amber-600 mb-2">3</div>
+                    <div class="text-gray-600 text-sm">Upcoming Exams / Kỳ thi sắp tới</div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <a href="#" class="quick-link bg-white p-4 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" data-page="learning">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Learning Pathway</div>
+                            <div class="text-sm text-gray-600">Track progress & insights</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="quick-link bg-white p-4 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" data-page="finance">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white">
+                            <i data-lucide="credit-card"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Finance</div>
+                            <div class="text-sm text-gray-600">Payments & invoices</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="quick-link bg-white p-4 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" data-page="schedule">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-amber-600 rounded-lg flex items-center justify-center text-white">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Schedule</div>
+                            <div class="text-sm text-gray-600">Classes & events</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="quick-link bg-white p-4 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow" data-page="enrollment">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center text-white">
+                            <i data-lucide="graduation-cap"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Enrollment</div>
+                            <div class="text-sm text-gray-600">Find new courses</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Recent Activity & Notifications -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold mb-4">Recent Activity / Hoạt động gần đây</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white">
+                                <i data-lucide="check"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Assignment Submitted</div>
+                                <div class="text-sm text-gray-600">Math homework - Calculus derivatives</div>
+                                <div class="text-xs text-gray-500">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                                <i data-lucide="user-check"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Class Attended</div>
+                                <div class="text-sm text-gray-600">Physics Lab - Optics experiment</div>
+                                <div class="text-xs text-gray-500">Yesterday, 2:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white">
+                                <i data-lucide="star"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Achievement Unlocked</div>
+                                <div class="text-sm text-gray-600">Perfect attendance for November</div>
+                                <div class="text-xs text-gray-500">2 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold">Notifications / Thông báo</h3>
+                        <a href="#" class="text-blue-600 text-sm hover:underline" data-page="notifications">View All</a>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="notification-item unread p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-semibold">New Assignment Posted</div>
+                                    <div class="text-sm text-gray-600">Chemistry - Organic compounds worksheet due Dec 25</div>
+                                </div>
+                                <div class="text-xs text-gray-500">1h</div>
+                            </div>
+                        </div>
+                        <div class="notification-item unread p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-semibold">Payment Reminder</div>
+                                    <div class="text-sm text-gray-600">Invoice #INV-2024-12-001 due in 2 days</div>
+                                </div>
+                                <div class="text-xs text-gray-500">3h</div>
+                            </div>
+                        </div>
+                        <div class="notification-item p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-semibold">Grade Updated</div>
+                                    <div class="text-sm text-gray-600">Physics Lab Report - Grade: A- (88%)</div>
+                                </div>
+                                <div class="text-xs text-gray-500">1d</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family Page -->
+        <div id="family" class="page">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Family Management / Quản lý gia đình</h1>
+                <p class="text-gray-600">Manage your children's profiles and switch between accounts</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Current Child -->
+                <div class="child-card bg-white p-6 rounded-xl border-2 border-blue-600 cursor-pointer active">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">E</div>
+                        <h3 class="text-xl font-semibold mb-2">Emma Nguyen</h3>
+                        <div class="text-gray-600 text-sm mb-4">Grade 11 • Age 16</div>
+                        <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Default Child</span>
+                        <div class="flex gap-2 justify-center">
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">View Profile</button>
+                            <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Child -->
+                <div class="child-card bg-white p-6 rounded-xl border border-gray-200 cursor-pointer hover:border-blue-600 hover:shadow-lg transition-all">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4">L</div>
+                        <h3 class="text-xl font-semibold mb-2">Lucas Nguyen</h3>
+                        <div class="text-gray-600 text-sm mb-4">Grade 8 • Age 13</div>
+                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-4">Active</span>
+                        <div class="flex gap-2 justify-center">
+                            <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Switch To</button>
+                            <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Child -->
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all">
+                    <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 mb-4">
+                        <i data-lucide="plus" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">Add Child</h3>
+                    <div class="text-gray-500 text-sm text-center">Create a new profile for another child</div>
+                </div>
+            </div>
+
+            <!-- Child Details -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-semibold mb-6">Emma's Details / Chi tiết của Emma</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-4">Personal Information</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Full Name:</span>
+                                <span class="font-medium">Emma Nguyen</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Date of Birth:</span>
+                                <span class="font-medium">March 15, 2008</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Grade Level:</span>
+                                <span class="font-medium">Grade 11</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Student ID:</span>
+                                <span class="font-medium">STU-2024-001</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-4">Academic Status</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Current GPA:</span>
+                                <span class="font-semibold text-green-600">3.8/4.0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Attendance:</span>
+                                <span class="font-semibold text-green-600">95%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Active Courses:</span>
+                                <span class="font-medium">5</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Next Exam:</span>
+                                <span class="font-medium">Dec 22, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                        <i data-lucide="edit"></i>
+                        Edit Profile
+                    </button>
+                    <button class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+                        <i data-lucide="download"></i>
+                        Download Report
+                    </button>
+                    <button class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+                        <i data-lucide="settings"></i>
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Pathway Page -->
+        <div id="learning" class="page">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Learning Pathway / Lộ trình học tập</h1>
+                <p class="text-gray-600">Emma's academic progress and AI-powered insights</p>
+            </div>
+
+            <!-- Performance Warning -->
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-lg mb-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="trending-down" class="text-amber-600"></i>
+                        <div>
+                            <strong class="text-amber-800">Performance Alert:</strong>
+                            <span class="text-amber-700">Emma's Chemistry scores have dropped 15% this month. Consider additional tutoring or study support.</span>
+                        </div>
+                    </div>
+                    <button class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700">Find Tutor</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- AI Summary -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="brain" class="text-amber-600"></i>
+                            <h3 class="text-xl font-semibold">AI Learning Summary / Tóm tắt AI</h3>
+                        </div>
+                        <div class="bg-amber-50 p-4 rounded-lg mb-6">
+                            <p class="mb-4"><strong>English:</strong> Emma demonstrates exceptional analytical skills in literature analysis. Her recent essay on Shakespeare's themes showed advanced critical thinking. Recommend advanced placement consideration.</p>
+                            <p><strong>Tiếng Việt:</strong> Emma thể hiện kỹ năng phân tích xuất sắc trong phân tích văn học. Bài luận gần đây về chủ đề Shakespeare cho thấy tư duy phản biện tiên tiến. Khuyến nghị xem xét chương trình nâng cao.</p>
+                        </div>
+                        
+                        <!-- Skills Radar Chart -->
+                        <div class="text-center">
+                            <h4 class="text-lg font-semibold mb-4">Skills Assessment / Đánh giá kỹ năng</h4>
+                            <div class="relative h-80">
+                                <canvas id="skillsRadarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Syllabus Progress -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-6">Syllabus Progress / Tiến độ chương trình</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">Mathematics</span>
+                                    <span class="font-mono">92%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 92%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">Physics</span>
+                                    <span class="font-mono">88%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 88%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">Chemistry</span>
+                                    <span class="font-mono">75%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%; background: #f59e0b;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-semibold">English Literature</span>
+                                    <span class="font-mono">95%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 95%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Attendance Widget -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Attendance / Điểm danh</h4>
+                        <div class="text-center mb-4">
+                            <div class="text-4xl font-bold text-green-600">95%</div>
+                            <div class="text-gray-600">This Month</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>Classes Attended</span>
+                                <span class="font-mono">19/20</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Excused Absences</span>
+                                <span class="font-mono">1</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Tardiness</span>
+                                <span class="font-mono">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignments -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-lg font-semibold">Assignments / Bài tập</h4>
+                            <button class="text-blue-600 text-sm hover:underline">View All</button>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+                                <div>
+                                    <div class="font-semibold">Chemistry Lab Report</div>
+                                    <div class="text-sm text-gray-600">Due: Dec 20, 2024</div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-medium">In Progress</span>
+                                    <button class="text-gray-600 hover:text-blue-600">
+                                        <i data-lucide="download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+                                <div>
+                                    <div class="font-semibold">Math Problem Set</div>
+                                    <div class="text-sm text-gray-600">Due: Dec 22, 2024</div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Not Started</span>
+                                    <button class="text-gray-600 hover:text-blue-600">
+                                        <i data-lucide="download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-3 border border-gray-200 rounded-lg">
+                                <div>
+                                    <div class="font-semibold">Literature Essay</div>
+                                    <div class="text-sm text-gray-600">Due: Dec 18, 2024</div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Submitted</span>
+                                    <button class="text-gray-600 hover:text-blue-600">
+                                        <i data-lucide="download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Page -->
+        <div id="schedule" class="page">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Schedule / Lịch học</h1>
+                <p class="text-gray-600">Emma's class schedule and upcoming events</p>
+            </div>
+
+            <!-- Exam Banner -->
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg mb-8">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="calendar-check" class="text-blue-600"></i>
+                        <div>
+                            <strong class="text-blue-800">Upcoming Exam:</strong>
+                            <span class="text-blue-700">Physics Final Exam on December 22nd at 9:00 AM in Room 301</span>
+                        </div>
+                    </div>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Add to Calendar</button>
+                </div>
+            </div>
+
+            <!-- Schedule Controls -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <div class="flex border-b border-gray-200">
+                    <button class="px-6 py-3 border-b-2 border-blue-600 text-blue-600 font-medium">Weekly View</button>
+                    <button class="px-6 py-3 text-gray-600 hover:text-blue-600">Monthly View</button>
+                </div>
+                <div class="flex gap-4">
+                    <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                        <option>All Classes</option>
+                        <option>Mathematics</option>
+                        <option>Physics</option>
+                        <option>Chemistry</option>
+                        <option>English</option>
+                    </select>
+                    <select class="border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                        <option>All Status</option>
+                        <option>Attended</option>
+                        <option>Missed</option>
+                        <option>Upcoming</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Weekly Schedule -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-xl font-semibold">This Week (Dec 16-22, 2024)</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-7 divide-x divide-gray-200">
+                    <!-- Monday -->
+                    <div class="p-4 min-h-96">
+                        <div class="font-semibold text-gray-900 mb-3">16 Mon</div>
+                        <div class="space-y-2">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                <div class="font-semibold text-sm">Advanced Math</div>
+                                <div class="text-xs text-gray-600">Mr. Tran • Room 201</div>
+                                <div class="text-xs text-gray-600">9:00-10:30 AM</div>
+                                <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium mt-2">Attended</span>
+                            </div>
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                <div class="font-semibold text-sm">English Lit</div>
+                                <div class="text-xs text-gray-600">Ms. Brown • Room 105</div>
+                                <div class="text-xs text-gray-600">2:00-3:30 PM</div>
+                                <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium mt-2">Attended</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tuesday -->
+                    <div class="p-4 min-h-96">
+                        <div class="font-semibold text-gray-900 mb-3">17 Tue</div>
+                        <div class="space-y-2">
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                                <div class="font-semibold text-sm">Physics Lab</div>
+                                <div class="text-xs text-gray-600">Ms. Le • Lab 3</div>
+                                <div class="text-xs text-gray-600">2:00-3:30 PM</div>
+                                <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium mt-2">Attended</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wednesday -->
+                    <div class="p-4 min-h-96 bg-blue-50">
+                        <div class="font-semibold text-blue-900 mb-3">18 Wed</div>
+                        <div class="space-y-2">
+                            <div class="bg-blue-100 border border-blue-300 rounded-lg p-3">
+                                <div class="font-semibold text-sm">Advanced Math</div>
+                                <div class="text-xs text-gray-600">Mr. Tran • Room 201</div>
+                                <div class="text-xs text-gray-600">9:00-10:30 AM</div>
+                                <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium mt-2">Today</span>
+                            </div>
+                            <div class="bg-amber-100 border border-amber-300 rounded-lg p-3">
+                                <div class="font-semibold text-sm">Chemistry</div>
+                                <div class="text-xs text-gray-600">Dr. Nguyen • Room 302</div>
+                                <div class="text-xs text-gray-600">1:00-2:30 PM</div>
+                                <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium mt-2">Today</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thursday -->
+                    <div class="p-4 min-h-96">
+                        <div class="font-semibold text-gray-900 mb-3">19 Thu</div>
+                        <div class="space-y-2">
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                                <div class="font-semibold text-sm">Physics Lab</div>
+                                <div class="text-xs text-gray-600">Ms. Le • Lab 3</div>
+                                <div class="text-xs text-gray-600">2:00-3:30 PM</div>
+                                <span class="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-medium mt-2">Upcoming</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Friday -->
+                    <div class="p-4 min-h-96">
+                        <div class="font-semibold text-gray-900 mb-3">20 Fri</div>
+                        <div class="space-y-2">
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                <div class="font-semibold text-sm">English Lit</div>
+                                <div class="text-xs text-gray-600">Ms. Brown • Room 105</div>
+                                <div class="text-xs text-gray-600">2:00-3:30 PM</div>
+                                <span class="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-medium mt-2">Upcoming</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Saturday -->
+                    <div class="p-4 min-h-96">
+                        <div class="font-semibold text-gray-900 mb-3">21 Sat</div>
+                        <div class="text-center text-gray-500 italic mt-8">
+                            No classes
+                        </div>
+                    </div>
+
+                    <!-- Sunday -->
+                    <div class="p-4 min-h-96">
+                        <div class="font-semibold text-gray-900 mb-3">22 Sun</div>
+                        <div class="space-y-2">
+                            <div class="bg-red-50 border-2 border-red-300 rounded-lg p-3">
+                                <div class="font-semibold text-sm">Physics Exam</div>
+                                <div class="text-xs text-gray-600">Final Exam • Room 301</div>
+                                <div class="text-xs text-gray-600">9:00-11:00 AM</div>
+                                <span class="inline-block bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium mt-2">Exam</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Page -->
+        <div id="notifications" class="page">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Notifications / Thông báo</h1>
+                <p class="text-gray-600">Stay updated with Emma's academic activities</p>
+            </div>
+
+            <!-- Notification Controls -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <div class="flex border-b border-gray-200">
+                    <button class="px-6 py-3 border-b-2 border-blue-600 text-blue-600 font-medium">Learning</button>
+                    <button class="px-6 py-3 text-gray-600 hover:text-blue-600">Finance</button>
+                    <button class="px-6 py-3 text-gray-600 hover:text-blue-600">Exams</button>
+                    <button class="px-6 py-3 text-gray-600 hover:text-blue-600">Other</button>
+                </div>
+                <div class="flex gap-4">
+                    <button class="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50">
+                        <i data-lucide="check-check"></i>
+                        Mark All Read
+                    </button>
+                    <button class="flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50">
+                        <i data-lucide="pin"></i>
+                        Pin Important
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notifications List -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 divide-y divide-gray-200">
+                <div class="notification-item unread p-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i data-lucide="book-open"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">New Assignment Posted</div>
+                                <div class="text-gray-600 text-sm mb-3">Chemistry - Organic compounds worksheet due December 25, 2024</div>
+                                <div class="flex gap-3">
+                                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">View Assignment</button>
+                                    <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Download PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 text-sm">1 hour ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item unread p-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i data-lucide="credit-card"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Payment Reminder</div>
+                                <div class="text-gray-600 text-sm mb-3">Invoice #INV-2024-12-001 ($450) is due in 2 days</div>
+                                <div class="flex gap-3">
+                                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700">Pay Now</button>
+                                    <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">View Invoice</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 text-sm">3 hours ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item p-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i data-lucide="star"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Grade Updated</div>
+                                <div class="text-gray-600 text-sm mb-3">Physics Lab Report - Grade: A- (88%)</div>
+                                <div class="flex gap-3">
+                                    <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 text-sm">1 day ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item p-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i data-lucide="calendar"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Exam Reminder</div>
+                                <div class="text-gray-600 text-sm mb-3">Physics Final Exam scheduled for December 22nd at 9:00 AM</div>
+                                <div class="flex gap-3">
+                                    <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Add to Calendar</button>
+                                    <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Study Materials</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 text-sm">2 days ago</div>
+                    </div>
+                </div>
+
+                <div class="notification-item p-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                                <i data-lucide="user-check"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold">Perfect Attendance Achievement</div>
+                                <div class="text-gray-600 text-sm mb-3">Emma achieved perfect attendance for November 2024</div>
+                                <div class="flex gap-3">
+                                    <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">View Certificate</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-gray-500 text-sm">3 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Navigation functionality
+        function initNavigation() {
+            const navItems = document.querySelectorAll('.nav-item, .mobile-nav-item, .quick-link');
+            const pages = document.querySelectorAll('.page');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetPage = item.getAttribute('data-page');
+                    
+                    if (targetPage) {
+                        // Update active states for nav items
+                        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                        document.querySelectorAll('.mobile-nav-item').forEach(nav => nav.classList.remove('active'));
+                        
+                        // Set active state for clicked item
+                        if (item.classList.contains('nav-item')) {
+                            item.classList.add('active');
+                        } else if (item.classList.contains('mobile-nav-item')) {
+                            item.classList.add('active');
+                        }
+                        
+                        // Show target page
+                        pages.forEach(page => page.classList.remove('active'));
+                        const targetElement = document.getElementById(targetPage);
+                        if (targetElement) {
+                            targetElement.classList.add('active');
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize Skills Radar Chart
+        function initSkillsChart() {
+            const ctx = document.getElementById('skillsRadarChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Mathematics', 'Physics', 'Chemistry', 'English', 'Critical Thinking', 'Problem Solving'],
+                        datasets: [{
+                            label: 'Current Level',
+                            data: [92, 88, 75, 95, 90, 85],
+                            borderColor: '#1e40af',
+                            backgroundColor: 'rgba(30, 64, 175, 0.1)',
+                            pointBackgroundColor: '#1e40af',
+                            pointBorderColor: '#1e40af',
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Toggle accordion
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('i');
+            
+            content.classList.toggle('active');
+            
+            if (content.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Copy referral code
+        function copyReferralCode() {
+            const code = 'MAINGUYEN2024';
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Referral code copied to clipboard!');
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initNavigation();
+            initSkillsChart();
+        });
+
+        // Handle form submissions
+        document.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted successfully! This is a demo.');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9816e6f74769897a',t:'MTc1ODI2MjA0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSys AI - Parent Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* CSS Variables - Design System */
+        :root {
+            /* Colors */
+            --primary: #1E40AF;
+            --primary-hover: #1D4ED8;
+            --accent: #F59E0B;
+            --accent-hover: #D97706;
+            --success: #10B981;
+            --error: #EF4444;
+            --info: #0EA5E9;
+            --neutral-900: #0B1220;
+            --neutral-800: #111827;
+            --neutral-600: #6B7280;
+            --neutral-300: #E5E7EB;
+            --neutral-100: #F3F4F6;
+            --neutral-50: #FFFFFF;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --h1-size: 32px;
+            --h1-height: 40px;
+            --h2-size: 24px;
+            --h2-height: 32px;
+            --h3-size: 20px;
+            --h3-height: 28px;
+            --body-size: 16px;
+            --body-height: 24px;
+            --small-size: 14px;
+            --small-height: 20px;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--body-size);
+            line-height: var(--body-height);
+            color: var(--neutral-800);
+            background-color: var(--neutral-100);
+        }
+
+        /* Typography Classes */
+        .h1 { font-size: var(--h1-size); line-height: var(--h1-height); font-weight: 600; }
+        .h2 { font-size: var(--h2-size); line-height: var(--h2-height); font-weight: 600; }
+        .h3 { font-size: var(--h3-size); line-height: var(--h3-height); font-weight: 600; }
+        .body { font-size: var(--body-size); line-height: var(--body-height); font-weight: 400; }
+        .small { font-size: var(--small-size); line-height: var(--small-height); font-weight: 400; }
+        .tabular { font-variant-numeric: tabular-nums; }
+
+        /* Layout */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .grid {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+        /* Component Library */
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: 12px var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: var(--body-size);
+            line-height: var(--body-height);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 40px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--neutral-50);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--neutral-50);
+            color: var(--primary);
+            border: 1px solid var(--neutral-300);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--neutral-100);
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: var(--neutral-50);
+        }
+
+        .btn-accent:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--neutral-50);
+        }
+
+        .btn-error {
+            background-color: var(--error);
+            color: var(--neutral-50);
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: var(--small-size);
+            min-height: 32px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--neutral-300);
+        }
+
+        .card-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: #DCFCE7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-error {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-info {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .alert-warning {
+            background-color: #FFFBEB;
+            border-color: var(--accent);
+            color: #92400E;
+        }
+
+        .alert-error {
+            background-color: #FEF2F2;
+            border-color: var(--error);
+            color: #991B1B;
+        }
+
+        .alert-info {
+            background-color: #EFF6FF;
+            border-color: var(--info);
+            color: #1E40AF;
+        }
+
+        .alert-success {
+            background-color: #F0FDF4;
+            border-color: var(--success);
+            color: #166534;
+        }
+
+        /* Navigation */
+        .nav-sidebar {
+            width: 280px;
+            background: var(--neutral-50);
+            border-right: 1px solid var(--neutral-300);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: 12px var(--spacing-md);
+            border-radius: var(--radius-sm);
+            color: var(--neutral-600);
+            text-decoration: none;
+            margin-bottom: var(--spacing-xs);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: var(--primary);
+            color: var(--neutral-50);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: var(--spacing-lg);
+            min-height: 100vh;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--neutral-50);
+            border-top: 1px solid var(--neutral-300);
+            padding: var(--spacing-sm) 0;
+        }
+
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: var(--spacing-sm);
+            color: var(--neutral-600);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            color: var(--neutral-800);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px var(--spacing-md);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            font-size: var(--body-size);
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px var(--spacing-md);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            font-size: var(--body-size);
+            background-color: var(--neutral-50);
+            cursor: pointer;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px var(--spacing-md);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            font-size: var(--body-size);
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-300);
+        }
+
+        .table th {
+            background-color: var(--neutral-100);
+            font-weight: 600;
+            color: var(--neutral-800);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--neutral-300);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .tab {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            background: none;
+            color: var(--neutral-600);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Accordion */
+        .accordion-item {
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-sm);
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: var(--spacing-md);
+            background: var(--neutral-100);
+            cursor: pointer;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .accordion-content {
+            padding: var(--spacing-md);
+            display: none;
+        }
+
+        .accordion-content.active {
+            display: block;
+        }
+
+        /* AI Helper Sidebar */
+        .ai-helper {
+            position: fixed;
+            right: var(--spacing-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 320px;
+            background: var(--neutral-50);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--neutral-300);
+            z-index: 1000;
+        }
+
+        .ai-helper-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--neutral-300);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .ai-helper-content {
+            padding: var(--spacing-md);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Bilingual Labels */
+        .bilingual-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .label-primary {
+            font-weight: 500;
+        }
+
+        .label-secondary {
+            font-size: var(--small-size);
+            color: var(--neutral-600);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-bottom: 80px;
+            }
+
+            .mobile-nav {
+                display: block;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+
+            .h1 { font-size: 24px; line-height: 32px; }
+            .h2 { font-size: 20px; line-height: 28px; }
+
+            .ai-helper {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                margin-top: var(--spacing-lg);
+            }
+        }
+
+        /* Page Specific Styles */
+        .page-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page-title {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-subtitle {
+            color: var(--neutral-600);
+        }
+
+        .section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .section-title {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Current Page Indicator */
+        .current-page {
+            display: block;
+        }
+
+        .hidden-page {
+            display: none;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--neutral-300);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-xl);
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload.dragover {
+            border-color: var(--primary);
+            background-color: rgba(30, 64, 175, 0.05);
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--neutral-300);
+            transition: 0.2s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Copy Code Box */
+        .copy-code {
+            background: var(--neutral-100);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: var(--small-size);
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Sidebar Navigation -->
+    <nav class="nav-sidebar">
+        <div style="margin-bottom: var(--spacing-xl);">
+            <div class="h2" style="color: var(--primary); margin-bottom: var(--spacing-sm);">EduSys AI</div>
+            <div class="small" style="color: var(--neutral-600);">Parent Portal</div>
+        </div>
+
+        <div>
+            <a href="#" class="nav-item active" onclick="showPage('class-management')">
+                <i data-lucide="book" style="width: 20px; height: 20px;"></i>
+                <span class="bilingual-label">
+                    <span class="label-primary">Class Management</span>
+                    <span class="label-secondary">Quản lý lớp học</span>
+                </span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('help-center')">
+                <i data-lucide="help-circle" style="width: 20px; height: 20px;"></i>
+                <span class="bilingual-label">
+                    <span class="label-primary">Help Center</span>
+                    <span class="label-secondary">Trung tâm hỗ trợ</span>
+                </span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('referral')">
+                <i data-lucide="gift" style="width: 20px; height: 20px;"></i>
+                <span class="bilingual-label">
+                    <span class="label-primary">Referral</span>
+                    <span class="label-secondary">Giới thiệu</span>
+                </span>
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('profile')">
+                <i data-lucide="user" style="width: 20px; height: 20px;"></i>
+                <span class="bilingual-label">
+                    <span class="label-primary">Profile</span>
+                    <span class="label-secondary">Hồ sơ</span>
+                </span>
+            </a>
+        </div>
+
+        <div style="margin-top: auto; padding-top: var(--spacing-xl);">
+            <a href="#" class="nav-item">
+                <i data-lucide="settings" style="width: 20px; height: 20px;"></i>
+                <span class="bilingual-label">
+                    <span class="label-primary">Settings</span>
+                    <span class="label-secondary">Cài đặt</span>
+                </span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
+                <span class="bilingual-label">
+                    <span class="label-primary">Logout</span>
+                    <span class="label-secondary">Đăng xuất</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a href="#" class="mobile-nav-item active" onclick="showPage('class-management')">
+                <i data-lucide="book" style="width: 20px; height: 20px;"></i>
+                <span>Classes</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="showPage('help-center')">
+                <i data-lucide="help-circle" style="width: 20px; height: 20px;"></i>
+                <span>Help</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="showPage('referral')">
+                <i data-lucide="gift" style="width: 20px; height: 20px;"></i>
+                <span>Referral</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="showPage('profile')">
+                <i data-lucide="user" style="width: 20px; height: 20px;"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page 1: Class Management -->
+        <div id="class-management-page" class="current-page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="h1 page-title">Class Management</h1>
+                    <p class="page-subtitle">Manage Alex's class enrollment, holds, and withdrawals</p>
+                </div>
+
+                <!-- Current Classes -->
+                <div class="section">
+                    <h2 class="h3 section-title">Current Classes</h2>
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Schedule</th>
+                                        <th>Teacher</th>
+                                        <th>Status</th>
+                                        <th>Fee</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <div class="body" style="font-weight: 500;">Advanced Mathematics 8A</div>
+                                                <div class="small" style="color: var(--neutral-600);">Grade 8 • Semester 1</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">Mon, Wed, Fri</div>
+                                            <div class="small" style="color: var(--neutral-600);">8:00 - 9:30 AM</div>
+                                        </td>
+                                        <td>Mr. Johnson</td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td class="tabular">$180/month</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm" onclick="openRequestForm('change')">Change</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <div class="body" style="font-weight: 500;">Science Lab 8B</div>
+                                                <div class="small" style="color: var(--neutral-600);">Grade 8 • Semester 1</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">Tue, Thu</div>
+                                            <div class="small" style="color: var(--neutral-600);">2:00 - 3:30 PM</div>
+                                        </td>
+                                        <td>Ms. Davis</td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td class="tabular">$150/month</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm" onclick="openRequestForm('hold')">Hold</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <div class="body" style="font-weight: 500;">English Literature 8A</div>
+                                                <div class="small" style="color: var(--neutral-600);">Grade 8 • Semester 1</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">Mon, Wed</div>
+                                            <div class="small" style="color: var(--neutral-600);">10:00 - 11:30 AM</div>
+                                        </td>
+                                        <td>Mrs. Smith</td>
+                                        <td><span class="badge badge-warning">On Hold</span></td>
+                                        <td class="tabular">$120/month</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">Resume</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Forms -->
+                <div class="section">
+                    <h2 class="h3 section-title">Class Change Requests</h2>
+                    
+                    <!-- Tabs -->
+                    <div class="tabs">
+                        <button class="tab active" onclick="showRequestTab('change')">Change Class</button>
+                        <button class="tab" onclick="showRequestTab('hold')">Hold Class</button>
+                        <button class="tab" onclick="showRequestTab('cancel')">Cancel Class</button>
+                    </div>
+
+                    <!-- Change Class Form -->
+                    <div id="change-form" class="card">
+                        <div class="card-body">
+                            <form onsubmit="handleFormSubmit(event, 'change')">
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Current Class</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select current class</option>
+                                            <option value="math8a">Advanced Mathematics 8A</option>
+                                            <option value="science8b">Science Lab 8B</option>
+                                            <option value="english8a">English Literature 8A</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Desired Class</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select new class</option>
+                                            <option value="math8b">Advanced Mathematics 8B</option>
+                                            <option value="math8c">Advanced Mathematics 8C</option>
+                                            <option value="science8a">Science Lab 8A</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Reason for Change</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select reason</option>
+                                        <option value="schedule">Schedule Conflict</option>
+                                        <option value="level">Difficulty Level</option>
+                                        <option value="teacher">Teacher Preference</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Additional Comments</label>
+                                    <textarea class="form-textarea" placeholder="Please provide additional details..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Preferred Start Date</label>
+                                    <input type="date" class="form-input" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Change Request</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Hold Class Form -->
+                    <div id="hold-form" class="card" style="display: none;">
+                        <div class="card-body">
+                            <div class="alert alert-warning">
+                                <i data-lucide="info" style="width: 16px; height: 16px; margin-right: var(--spacing-sm);"></i>
+                                <strong>Hold Policy:</strong> Classes can be held for up to 3 months. A $25 administrative fee applies. You'll retain your spot in the class.
+                            </div>
+                            <form onsubmit="handleFormSubmit(event, 'hold')">
+                                <div class="form-group">
+                                    <label class="form-label">Class to Hold</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select class</option>
+                                        <option value="math8a">Advanced Mathematics 8A</option>
+                                        <option value="science8b">Science Lab 8B</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Hold Start Date</label>
+                                        <input type="date" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Expected Return Date</label>
+                                        <input type="date" class="form-input" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Reason for Hold</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select reason</option>
+                                        <option value="vacation">Family Vacation</option>
+                                        <option value="medical">Medical Reasons</option>
+                                        <option value="financial">Financial Hardship</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Additional Details</label>
+                                    <textarea class="form-textarea" placeholder="Please provide additional information..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-accent">Submit Hold Request</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Cancel Class Form -->
+                    <div id="cancel-form" class="card" style="display: none;">
+                        <div class="card-body">
+                            <div class="alert alert-error">
+                                <i data-lucide="alert-triangle" style="width: 16px; height: 16px; margin-right: var(--spacing-sm);"></i>
+                                <strong>Cancellation Policy:</strong> 30-day notice required. Refunds are prorated. Cancellation fee may apply based on contract terms.
+                            </div>
+                            <form onsubmit="handleFormSubmit(event, 'cancel')">
+                                <div class="form-group">
+                                    <label class="form-label">Class to Cancel</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select class</option>
+                                        <option value="math8a">Advanced Mathematics 8A</option>
+                                        <option value="science8b">Science Lab 8B</option>
+                                        <option value="english8a">English Literature 8A</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Last Attendance Date</label>
+                                    <input type="date" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Reason for Cancellation</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select reason</option>
+                                        <option value="moving">Moving/Relocation</option>
+                                        <option value="financial">Financial Reasons</option>
+                                        <option value="dissatisfied">Dissatisfied with Service</option>
+                                        <option value="schedule">Schedule Conflicts</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Detailed Feedback</label>
+                                    <textarea class="form-textarea" placeholder="Please help us understand your decision..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                                        <input type="checkbox" required>
+                                        <span class="small">I understand the cancellation policy and fees</span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-error">Submit Cancellation Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Helper Sidebar -->
+            <div class="ai-helper">
+                <div class="ai-helper-header">
+                    <div style="width: 32px; height: 32px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="brain" style="width: 16px; height: 16px; color: var(--neutral-50);"></i>
+                    </div>
+                    <div>
+                        <div class="body" style="font-weight: 600;">AI Assistant</div>
+                        <div class="small" style="color: var(--neutral-600);">Class Management Helper</div>
+                    </div>
+                </div>
+                <div class="ai-helper-content">
+                    <div style="margin-bottom: var(--spacing-md);">
+                        <div class="small" style="font-weight: 600; margin-bottom: var(--spacing-xs);">💡 Smart Suggestions</div>
+                        <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-sm);">
+                            Based on Alex's performance, I recommend keeping the current Math class but consider moving to Science 8A for better peer interaction.
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: var(--spacing-md);">
+                        <div class="small" style="font-weight: 600; margin-bottom: var(--spacing-xs);">💰 Fee Estimate</div>
+                        <div class="small" style="color: var(--neutral-600);">
+                            • Change fee: $50<br>
+                            • Hold fee: $25/month<br>
+                            • Cancellation: 30-day notice
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: var(--spacing-md);">
+                        <div class="small" style="font-weight: 600; margin-bottom: var(--spacing-xs);">🎯 Alternative Classes</div>
+                        <div class="small" style="color: var(--neutral-600);">
+                            • Math 8B: Tue/Thu 2:00 PM<br>
+                            • Science 8A: Mon/Wed 3:00 PM<br>
+                            • English 8B: Fri 10:00 AM
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-sm" style="width: 100%;">
+                        <i data-lucide="message-circle" style="width: 14px; height: 14px;"></i>
+                        Chat with AI
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Help Center -->
+        <div id="help-center-page" class="hidden-page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="h1 page-title">Help Center</h1>
+                    <p class="page-subtitle">Get support and find answers to your questions</p>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="section">
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div style="width: 64px; height: 64px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                                    <i data-lucide="message-circle" style="width: 32px; height: 32px; color: var(--neutral-50);"></i>
+                                </div>
+                                <div class="h3" style="margin-bottom: var(--spacing-sm);">AI Chatbot</div>
+                                <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-md);">
+                                    Get instant answers to common questions about classes, payments, and policies.
+                                </div>
+                                <button class="btn btn-primary" onclick="openChatbot()">
+                                    <i data-lucide="bot" style="width: 16px; height: 16px;"></i>
+                                    Open AI Chatbot
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <div style="width: 64px; height: 64px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                                    <i data-lucide="headphones" style="width: 32px; height: 32px; color: var(--neutral-50);"></i>
+                                </div>
+                                <div class="h3" style="margin-bottom: var(--spacing-sm);">Live Support</div>
+                                <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-md);">
+                                    Connect with our support team for personalized assistance.
+                                </div>
+                                <button class="btn btn-accent">
+                                    <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
+                                    Call Support
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="section">
+                    <h2 class="h3 section-title">Frequently Asked Questions</h2>
+                    <div class="card">
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>How do I change my child's class schedule?</span>
+                                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="small">You can request a class change through the Class Management page. Select the current class and desired new class, provide a reason, and submit the request. Changes typically take 3-5 business days to process and may incur a $50 administrative fee.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>What is the refund policy for class cancellations?</span>
+                                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="small">Refunds are prorated based on the number of classes attended. A 30-day notice is required for cancellations. Cancellation fees may apply based on your enrollment contract terms. Contact our billing department for specific calculations.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>How do I put a class on hold?</span>
+                                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="small">Classes can be held for up to 3 months with a $25/month administrative fee. Use the Class Management page to submit a hold request. You'll retain your spot in the class and can resume at any time during the hold period.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>How can I track my child's progress?</span>
+                                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="small">Progress is tracked through our Learning Pathway page, which shows real-time updates on assignments, test scores, and overall performance. You'll also receive weekly progress reports via email and push notifications for important updates.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>What payment methods do you accept?</span>
+                                <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <p class="small">We accept credit cards (Visa, MasterCard, American Express), bank transfers, and PayPal. Auto-pay discounts are available for monthly subscriptions. Payment is due by the 1st of each month.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Support Ticket -->
+                <div class="section">
+                    <h2 class="h3 section-title">Create Support Ticket</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <form onsubmit="handleTicketSubmit(event)">
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Topic Category</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select category</option>
+                                            <option value="billing">Billing & Payments</option>
+                                            <option value="technical">Technical Issues</option>
+                                            <option value="academic">Academic Support</option>
+                                            <option value="schedule">Schedule Changes</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Priority Level</label>
+                                        <select class="form-select" required>
+                                            <option value="">Select priority</option>
+                                            <option value="low">Low - General inquiry</option>
+                                            <option value="medium">Medium - Non-urgent issue</option>
+                                            <option value="high">High - Urgent matter</option>
+                                            <option value="critical">Critical - Emergency</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Subject</label>
+                                    <input type="text" class="form-input" placeholder="Brief description of your issue" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-textarea" placeholder="Please provide detailed information about your issue..." required style="min-height: 120px;"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Attach Files (Optional)</label>
+                                    <div class="file-upload" onclick="document.getElementById('ticket-files').click()">
+                                        <i data-lucide="upload" style="width: 24px; height: 24px; color: var(--neutral-600); margin-bottom: var(--spacing-sm);"></i>
+                                        <div class="small" style="color: var(--neutral-600);">Click to upload files or drag and drop</div>
+                                        <div class="small" style="color: var(--neutral-600);">Max 10MB per file</div>
+                                    </div>
+                                    <input type="file" id="ticket-files" multiple style="display: none;" accept=".pdf,.doc,.docx,.jpg,.png">
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                                    Submit Ticket
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ticket History -->
+                <div class="section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+                        <h2 class="h3">Support Ticket History</h2>
+                        <div style="display: flex; gap: var(--spacing-sm);">
+                            <select class="btn btn-secondary btn-sm">
+                                <option>All Status</option>
+                                <option>Open</option>
+                                <option>In Progress</option>
+                                <option>Resolved</option>
+                                <option>Closed</option>
+                            </select>
+                            <select class="btn btn-secondary btn-sm">
+                                <option>All Categories</option>
+                                <option>Billing</option>
+                                <option>Technical</option>
+                                <option>Academic</option>
+                                <option>Schedule</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket ID</th>
+                                        <th>Subject</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
+                                        <th>Created</th>
+                                        <th>SLA</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="tabular">#12345</td>
+                                        <td>Payment not processed</td>
+                                        <td>Billing</td>
+                                        <td><span class="badge badge-warning">In Progress</span></td>
+                                        <td><span class="badge badge-error">High</span></td>
+                                        <td>Dec 10, 2024</td>
+                                        <td class="small" style="color: var(--success);">Within SLA</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tabular">#12344</td>
+                                        <td>Class schedule conflict</td>
+                                        <td>Schedule</td>
+                                        <td><span class="badge badge-success">Resolved</span></td>
+                                        <td><span class="badge badge-info">Medium</span></td>
+                                        <td>Dec 8, 2024</td>
+                                        <td class="small" style="color: var(--success);">Resolved on time</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tabular">#12343</td>
+                                        <td>Login issues with portal</td>
+                                        <td>Technical</td>
+                                        <td><span class="badge badge-success">Closed</span></td>
+                                        <td><span class="badge badge-info">Low</span></td>
+                                        <td>Dec 5, 2024</td>
+                                        <td class="small" style="color: var(--success);">Resolved early</td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Referral -->
+        <div id="referral-page" class="hidden-page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="h1 page-title">Referral Program</h1>
+                    <p class="page-subtitle">Earn credits by referring friends to EduSys AI</p>
+                </div>
+
+                <!-- Referral Overview -->
+                <div class="section">
+                    <div class="grid grid-3">
+                        <div class="card" style="text-align: center;">
+                            <div class="card-body">
+                                <div style="width: 64px; height: 64px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                                    <i data-lucide="dollar-sign" style="width: 32px; height: 32px; color: var(--neutral-50);"></i>
+                                </div>
+                                <div class="h2 tabular" style="color: var(--success);">$150</div>
+                                <div class="small" style="color: var(--neutral-600);">Available Credits</div>
+                            </div>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <div class="card-body">
+                                <div style="width: 64px; height: 64px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                                    <i data-lucide="users" style="width: 32px; height: 32px; color: var(--neutral-50);"></i>
+                                </div>
+                                <div class="h2 tabular">8</div>
+                                <div class="small" style="color: var(--neutral-600);">Successful Referrals</div>
+                            </div>
+                        </div>
+                        <div class="card" style="text-align: center;">
+                            <div class="card-body">
+                                <div style="width: 64px; height: 64px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--spacing-md);">
+                                    <i data-lucide="gift" style="width: 32px; height: 32px; color: var(--neutral-50);"></i>
+                                </div>
+                                <div class="h2 tabular">$50</div>
+                                <div class="small" style="color: var(--neutral-600);">Per Referral Bonus</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Code -->
+                <div class="section">
+                    <h2 class="h3 section-title">Your Referral Code</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div style="display: flex; align-items: center; gap: var(--spacing-lg);">
+                                <div style="flex: 1;">
+                                    <div class="h3" style="margin-bottom: var(--spacing-sm);">ALEX2024</div>
+                                    <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-md);">
+                                        Share this code with friends and family. They get $25 off their first month, and you earn $50 credit when they enroll!
+                                    </div>
+                                    <div class="copy-code">
+                                        <span class="tabular">ALEX2024</span>
+                                        <button class="btn btn-secondary btn-sm" onclick="copyReferralCode()">
+                                            <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="width: 120px; height: 120px; background: var(--neutral-100); border: 2px dashed var(--neutral-300); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: var(--spacing-sm);">
+                                        <i data-lucide="qr-code" style="width: 48px; height: 48px; color: var(--neutral-600);"></i>
+                                    </div>
+                                    <div class="small" style="color: var(--neutral-600);">QR Code</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Options -->
+                <div class="section">
+                    <h2 class="h3 section-title">Share Your Referral</h2>
+                    <div class="grid grid-4">
+                        <button class="btn btn-primary" onclick="shareReferral('email')">
+                            <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
+                            Email
+                        </button>
+                        <button class="btn btn-info" onclick="shareReferral('facebook')">
+                            <i data-lucide="facebook" style="width: 16px; height: 16px;"></i>
+                            Facebook
+                        </button>
+                        <button class="btn btn-success" onclick="shareReferral('whatsapp')">
+                            <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                            WhatsApp
+                        </button>
+                        <button class="btn btn-secondary" onclick="shareReferral('copy')">
+                            <i data-lucide="link" style="width: 16px; height: 16px;"></i>
+                            Copy Link
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Referral History -->
+                <div class="section">
+                    <h2 class="h3 section-title">Referral History</h2>
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Referred Friend</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Enrollment Date</th>
+                                        <th>Credit Earned</th>
+                                        <th>Credit Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Sarah Johnson</td>
+                                        <td>sarah.j@email.com</td>
+                                        <td><span class="badge badge-success">Enrolled</span></td>
+                                        <td>Dec 8, 2024</td>
+                                        <td class="tabular">$50</td>
+                                        <td><span class="badge badge-success">Applied</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mike Chen</td>
+                                        <td>mike.chen@email.com</td>
+                                        <td><span class="badge badge-success">Enrolled</span></td>
+                                        <td>Dec 5, 2024</td>
+                                        <td class="tabular">$50</td>
+                                        <td><span class="badge badge-success">Applied</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lisa Wong</td>
+                                        <td>lisa.wong@email.com</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                        <td>-</td>
+                                        <td class="tabular">$50</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>David Kim</td>
+                                        <td>david.kim@email.com</td>
+                                        <td><span class="badge badge-info">Registered</span></td>
+                                        <td>-</td>
+                                        <td class="tabular">$50</td>
+                                        <td><span class="badge badge-info">Pending Enrollment</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Balance & Usage -->
+                <div class="section">
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="h3" style="margin-bottom: var(--spacing-md);">Credit Balance</h3>
+                                <div style="margin-bottom: var(--spacing-md);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm);">
+                                        <span class="small">Available Credits</span>
+                                        <span class="small tabular" style="color: var(--success);">$150.00</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm);">
+                                        <span class="small">Pending Credits</span>
+                                        <span class="small tabular" style="color: var(--accent);">$100.00</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm);">
+                                        <span class="small">Total Earned</span>
+                                        <span class="small tabular">$400.00</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;">
+                                    Apply Credits to Next Bill
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="h3" style="margin-bottom: var(--spacing-md);">Program Terms</h3>
+                                <div class="small" style="color: var(--neutral-600); line-height: 1.6;">
+                                    • Earn $50 for each successful referral<br>
+                                    • Referred friends get $25 off first month<br>
+                                    • Credits expire after 12 months<br>
+                                    • Minimum enrollment period: 3 months<br>
+                                    • Credits cannot be transferred or exchanged for cash
+                                </div>
+                                <button class="btn btn-secondary" style="width: 100%; margin-top: var(--spacing-md);">
+                                    <i data-lucide="file-text" style="width: 14px; height: 14px;"></i>
+                                    View Full Terms
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 4: Profile -->
+        <div id="profile-page" class="hidden-page">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="h1 page-title">Profile Settings</h1>
+                    <p class="page-subtitle">Manage your account information and preferences</p>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="section">
+                    <h2 class="h3 section-title">Personal Information</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <form onsubmit="handleProfileUpdate(event)">
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" class="form-input" value="John" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" class="form-input" value="Chen" required>
+                                    </div>
+                                </div>
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" class="form-input" value="john.chen@email.com" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-input" value="+1 (555) 123-4567" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-input" value="123 Main Street, Anytown, ST 12345" required>
+                                </div>
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label">Emergency Contact Name</label>
+                                        <input type="text" class="form-input" value="Jane Chen" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Emergency Contact Phone</label>
+                                        <input type="tel" class="form-input" value="+1 (555) 987-6543" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Information</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ID Documents -->
+                <div class="section">
+                    <h2 class="h3 section-title">Identity Documents</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="grid grid-2">
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-label">Driver's License / ID</label>
+                                        <div class="file-upload" onclick="document.getElementById('id-upload').click()">
+                                            <i data-lucide="upload" style="width: 24px; height: 24px; color: var(--neutral-600); margin-bottom: var(--spacing-sm);"></i>
+                                            <div class="small" style="color: var(--neutral-600);">Upload ID Document</div>
+                                            <div class="small" style="color: var(--neutral-600);">PDF, JPG, PNG (Max 5MB)</div>
+                                        </div>
+                                        <input type="file" id="id-upload" style="display: none;" accept=".pdf,.jpg,.jpeg,.png">
+                                    </div>
+                                    <div class="alert alert-success" style="margin-top: var(--spacing-sm);">
+                                        <i data-lucide="check-circle" style="width: 16px; height: 16px; margin-right: var(--spacing-sm);"></i>
+                                        ID document verified ✓
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label class="form-label">Proof of Address</label>
+                                        <div class="file-upload" onclick="document.getElementById('address-upload').click()">
+                                            <i data-lucide="upload" style="width: 24px; height: 24px; color: var(--neutral-600); margin-bottom: var(--spacing-sm);"></i>
+                                            <div class="small" style="color: var(--neutral-600);">Upload Address Proof</div>
+                                            <div class="small" style="color: var(--neutral-600);">Utility bill, bank statement</div>
+                                        </div>
+                                        <input type="file" id="address-upload" style="display: none;" accept=".pdf,.jpg,.jpeg,.png">
+                                    </div>
+                                    <div class="alert alert-warning" style="margin-top: var(--spacing-sm);">
+                                        <i data-lucide="clock" style="width: 16px; height: 16px; margin-right: var(--spacing-sm);"></i>
+                                        Verification pending
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="section">
+                    <h2 class="h3 section-title">Security Settings</h2>
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="body" style="font-weight: 600; margin-bottom: var(--spacing-md);">Change Password</h3>
+                                <form onsubmit="handlePasswordChange(event)">
+                                    <div class="form-group">
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-input" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="body" style="font-weight: 600; margin-bottom: var(--spacing-md);">Two-Factor Authentication</h3>
+                                <div style="margin-bottom: var(--spacing-md);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+                                        <span class="small">SMS Authentication</span>
+                                        <label class="toggle">
+                                            <input type="checkbox" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="small" style="color: var(--neutral-600);">Receive codes via SMS to +1 (555) 123-4567</div>
+                                </div>
+                                
+                                <div style="margin-bottom: var(--spacing-md);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+                                        <span class="small">Authenticator App</span>
+                                        <label class="toggle">
+                                            <input type="checkbox">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="small" style="color: var(--neutral-600);">Use Google Authenticator or similar app</div>
+                                </div>
+                                
+                                <button class="btn btn-secondary" style="width: 100%;">
+                                    <i data-lucide="smartphone" style="width: 14px; height: 14px;"></i>
+                                    Setup Authenticator
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Children Profiles -->
+                <div class="section">
+                    <h2 class="h3 section-title">Children Profiles</h2>
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md);">
+                                    <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--neutral-50); font-size: 24px; font-weight: 600;">A</div>
+                                    <div>
+                                        <div class="body" style="font-weight: 600;">Alex Chen</div>
+                                        <div class="small" style="color: var(--neutral-600);">Grade 8A • Age 14</div>
+                                        <div class="badge badge-success" style="margin-top: 4px;">Active</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: var(--spacing-sm);">
+                                    <button class="btn btn-secondary btn-sm" style="flex: 1;">Edit Profile</button>
+                                    <button class="btn btn-primary btn-sm" style="flex: 1;">View Progress</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-md);">
+                                    <div style="width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--neutral-50); font-size: 24px; font-weight: 600;">E</div>
+                                    <div>
+                                        <div class="body" style="font-weight: 600;">Emma Chen</div>
+                                        <div class="small" style="color: var(--neutral-600);">Grade 5B • Age 11</div>
+                                        <div class="badge badge-success" style="margin-top: 4px;">Active</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: var(--spacing-sm);">
+                                    <button class="btn btn-secondary btn-sm" style="flex: 1;">Edit Profile</button>
+                                    <button class="btn btn-primary btn-sm" style="flex: 1;">View Progress</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Preferences -->
+                <div class="section">
+                    <h2 class="h3 section-title">Notification Preferences</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="grid grid-2">
+                                <div>
+                                    <h3 class="body" style="font-weight: 600; margin-bottom: var(--spacing-md);">Email Notifications</h3>
+                                    <div style="margin-bottom: var(--spacing-sm);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Assignment reminders</span>
+                                            <label class="toggle">
+                                                <input type="checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: var(--spacing-sm);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Progress reports</span>
+                                            <label class="toggle">
+                                                <input type="checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: var(--spacing-sm);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Payment reminders</span>
+                                            <label class="toggle">
+                                                <input type="checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Marketing emails</span>
+                                            <label class="toggle">
+                                                <input type="checkbox">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="body" style="font-weight: 600; margin-bottom: var(--spacing-md);">Push Notifications</h3>
+                                    <div style="margin-bottom: var(--spacing-sm);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Urgent alerts</span>
+                                            <label class="toggle">
+                                                <input type="checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: var(--spacing-sm);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Class updates</span>
+                                            <label class="toggle">
+                                                <input type="checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: var(--spacing-sm);">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Achievement badges</span>
+                                            <label class="toggle">
+                                                <input type="checkbox" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                            <span class="small">Weekly summaries</span>
+                                            <label class="toggle">
+                                                <input type="checkbox">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top: var(--spacing-lg);">
+                                <button class="btn btn-primary">Save Preferences</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Actions -->
+                <div class="section">
+                    <h2 class="h3 section-title">Account Actions</h2>
+                    <div class="grid grid-3">
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <i data-lucide="download" style="width: 32px; height: 32px; color: var(--primary); margin-bottom: var(--spacing-sm);"></i>
+                                <div class="body" style="font-weight: 600; margin-bottom: var(--spacing-sm);">Export Data</div>
+                                <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-md);">Download your account data and records</div>
+                                <button class="btn btn-secondary btn-sm">Request Export</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <i data-lucide="pause" style="width: 32px; height: 32px; color: var(--accent); margin-bottom: var(--spacing-sm);"></i>
+                                <div class="body" style="font-weight: 600; margin-bottom: var(--spacing-sm);">Suspend Account</div>
+                                <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-md);">Temporarily deactivate your account</div>
+                                <button class="btn btn-accent btn-sm">Suspend</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <i data-lucide="trash-2" style="width: 32px; height: 32px; color: var(--error); margin-bottom: var(--spacing-sm);"></i>
+                                <div class="body" style="font-weight: 600; margin-bottom: var(--spacing-sm);">Delete Account</div>
+                                <div class="small" style="color: var(--neutral-600); margin-bottom: var(--spacing-md);">Permanently delete your account</div>
+                                <button class="btn btn-error btn-sm">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('[id$="-page"]');
+            pages.forEach(page => {
+                page.classList.remove('current-page');
+                page.classList.add('hidden-page');
+            });
+
+            // Show selected page
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.remove('hidden-page');
+                targetPage.classList.add('current-page');
+            }
+
+            // Update navigation active states
+            const navItems = document.querySelectorAll('.nav-item, .mobile-nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked navigation items
+            const activeNavItems = document.querySelectorAll(`[onclick="showPage('${pageId}')"]`);
+            activeNavItems.forEach(item => {
+                item.classList.add('active');
+            });
+        }
+
+        // Request form tabs
+        function showRequestTab(tabType) {
+            // Update tab active states
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Hide all forms
+            document.getElementById('change-form').style.display = 'none';
+            document.getElementById('hold-form').style.display = 'none';
+            document.getElementById('cancel-form').style.display = 'none';
+
+            // Show selected form
+            document.getElementById(tabType + '-form').style.display = 'block';
+        }
+
+        // Open request form with specific type
+        function openRequestForm(type) {
+            showPage('class-management');
+            setTimeout(() => {
+                showRequestTab(type);
+            }, 100);
+        }
+
+        // Accordion functionality
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('i');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Close all other accordions
+                document.querySelectorAll('.accordion-content').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelectorAll('.accordion-header i').forEach(item => {
+                    item.style.transform = 'rotate(0deg)';
+                });
+                
+                // Open clicked accordion
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Copy referral code
+        function copyReferralCode() {
+            navigator.clipboard.writeText('ALEX2024').then(() => {
+                alert('Referral code copied to clipboard!');
+            });
+        }
+
+        // Share referral
+        function shareReferral(platform) {
+            const referralCode = 'ALEX2024';
+            const message = `Join EduSys AI with my referral code ${referralCode} and get $25 off your first month!`;
+            
+            switch(platform) {
+                case 'email':
+                    window.open(`mailto:?subject=Join EduSys AI&body=${encodeURIComponent(message)}`);
+                    break;
+                case 'facebook':
+                    alert('Facebook sharing would open in a real application');
+                    break;
+                case 'whatsapp':
+                    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+                    break;
+                case 'copy':
+                    navigator.clipboard.writeText(message).then(() => {
+                        alert('Referral message copied to clipboard!');
+                    });
+                    break;
+            }
+        }
+
+        // Open chatbot
+        function openChatbot() {
+            alert('AI Chatbot would open in a real application');
+        }
+
+        // Form submission handlers
+        function handleFormSubmit(event, type) {
+            event.preventDefault();
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} request submitted successfully! You will receive a confirmation email shortly.`);
+        }
+
+        function handleTicketSubmit(event) {
+            event.preventDefault();
+            alert('Support ticket created successfully! Ticket #12346 has been assigned to you.');
+        }
+
+        function handleProfileUpdate(event) {
+            event.preventDefault();
+            alert('Profile information updated successfully!');
+        }
+
+        function handlePasswordChange(event) {
+            event.preventDefault();
+            alert('Password changed successfully!');
+        }
+
+        // File upload handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploads = document.querySelectorAll('.file-upload');
+            fileUploads.forEach(upload => {
+                upload.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                
+                upload.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                });
+                
+                upload.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    alert('File uploaded successfully!');
+                });
+            });
+
+            // Handle form submissions (prevent navigation)
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // Form submission is handled by specific handlers above
+                });
+            });
+        });
+
+        // Responsive behavior
+        function handleResize() {
+            const isMobile = window.innerWidth <= 768;
+            const sidebar = document.querySelector('.nav-sidebar');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const aiHelper = document.querySelector('.ai-helper');
+            
+            if (isMobile) {
+                sidebar.style.display = 'none';
+                mobileNav.style.display = 'block';
+                if (aiHelper) {
+                    aiHelper.style.position = 'relative';
+                    aiHelper.style.right = 'auto';
+                    aiHelper.style.top = 'auto';
+                    aiHelper.style.transform = 'none';
+                    aiHelper.style.width = '100%';
+                    aiHelper.style.marginTop = 'var(--spacing-lg)';
+                }
+            } else {
+                sidebar.style.display = 'block';
+                mobileNav.style.display = 'none';
+                if (aiHelper) {
+                    aiHelper.style.position = 'fixed';
+                    aiHelper.style.right = 'var(--spacing-lg)';
+                    aiHelper.style.top = '50%';
+                    aiHelper.style.transform = 'translateY(-50%)';
+                    aiHelper.style.width = '320px';
+                    aiHelper.style.marginTop = '0';
+                }s
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial call
+
+        // Accessibility improvements
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-navigation');
+            }
+        });
+
+        document.addEventListener('mousedown', function() {
+            document.body.classList.remove('keyboard-navigation');
+        });
+
+        // Add focus styles for keyboard navigation
+        const style = document.createElement('style');
+        style.textContent = `
+            .keyboard-navigation *:focus {
+                outline: 2px solid var(--primary) !important;
+                outline-offset: 2px !important;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98174e1766d9f894',t:'MTc1ODI2NjI2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

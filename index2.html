@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSys AI - Parent Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .nav-item.active { background: #1e40af; color: white; }
+        .mobile-nav-item.active { color: #1e40af; }
+        .course-card { transition: all 0.3s ease; }
+        .course-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .status-paid { background: #dcfce7; color: #166534; }
+        .status-unpaid { background: #fef2f2; color: #dc2626; }
+        .status-overdue { background: #fef3c7; color: #d97706; }
+        .empty-state { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Desktop Sidebar -->
+    <nav class="fixed left-0 top-0 w-72 h-full bg-white border-r border-gray-200 p-6 z-50 hidden lg:block overflow-y-auto">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-blue-600 mb-2">EduSys AI</h2>
+            <p class="text-gray-600 text-sm">Parent Portal</p>
+        </div>
+        
+        <div class="space-y-2">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors active" data-page="finance">
+                <i data-lucide="credit-card"></i>
+                <span>Finance</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="enrollment">
+                <i data-lucide="graduation-cap"></i>
+                <span>Enrollment</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="cart">
+                <i data-lucide="shopping-cart"></i>
+                <span>Cart</span>
+                <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-auto">3</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" data-page="confirmation">
+                <i data-lucide="check-circle"></i>
+                <span>Order Status</span>
+            </a>
+        </div>
+        
+        <div class="mt-auto pt-8 border-t border-gray-200">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">MN</div>
+                <div>
+                    <div class="font-semibold">Mai Nguyen</div>
+                    <div class="text-sm text-gray-600">Parent</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 z-50 lg:hidden">
+        <div class="flex justify-around">
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600 active" data-page="finance">
+                <i data-lucide="credit-card"></i>
+                <span class="text-xs">Finance</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600" data-page="enrollment">
+                <i data-lucide="graduation-cap"></i>
+                <span class="text-xs">Enroll</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600 relative" data-page="cart">
+                <i data-lucide="shopping-cart"></i>
+                <span class="text-xs">Cart</span>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+            </a>
+            <a href="#" class="mobile-nav-item flex flex-col items-center gap-1 p-2 text-gray-600" data-page="confirmation">
+                <i data-lucide="check-circle"></i>
+                <span class="text-xs">Status</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72 p-4 lg:p-8 pb-20 lg:pb-8">
+        <!-- Finance Page -->
+        <div id="finance" class="page active">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Finance</h1>
+                <p class="text-gray-600">Manage invoices, payments, and view spending analytics</p>
+            </div>
+
+            <!-- Empty State for All Paid -->
+            <div id="allPaidState" class="empty-state rounded-xl p-12 text-center mb-8" style="display: none;">
+                <div class="w-32 h-32 mx-auto mb-6">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                        <path d="M70 100 L90 120 L130 80" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="60" cy="60" r="8" fill="rgba(255,255,255,0.6)"/>
+                        <circle cx="140" cy="70" r="6" fill="rgba(255,255,255,0.4)"/>
+                        <circle cx="160" cy="130" r="10" fill="rgba(255,255,255,0.3)"/>
+                    </svg>
+                </div>
+                <h2 class="text-3xl font-bold mb-4">🎉 All Caught Up!</h2>
+                <p class="text-xl opacity-90 mb-6">Fantastic! All your invoices are paid. You're all set for Emma's learning journey.</p>
+                <button class="bg-white bg-opacity-20 text-white px-8 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition-all">
+                    View Payment History
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Invoices Table -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-semibold">Invoices</h3>
+                                <button class="text-blue-600 hover:text-blue-700 text-sm font-medium" onclick="showAllPaid()">
+                                    Demo: Show All Paid
+                                </button>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice #</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="bg-red-50">
+                                        <td class="px-6 py-4 font-mono text-sm">INV-2024-12-001</td>
+                                        <td class="px-6 py-4 font-semibold">$450.00</td>
+                                        <td class="px-6 py-4 text-sm">Dec 20, 2024</td>
+                                        <td class="px-6 py-4">
+                                            <span class="status-unpaid px-3 py-1 rounded-full text-xs font-medium">Unpaid</span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex gap-2">
+                                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 font-semibold">Pay Now</button>
+                                                <button class="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+                                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-amber-50">
+                                        <td class="px-6 py-4 font-mono text-sm">INV-2024-11-028</td>
+                                        <td class="px-6 py-4 font-semibold">$320.00</td>
+                                        <td class="px-6 py-4 text-sm">Dec 15, 2024</td>
+                                        <td class="px-6 py-4">
+                                            <span class="status-overdue px-3 py-1 rounded-full text-xs font-medium">Overdue</span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex gap-2">
+                                                <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 font-semibold">Pay Now</button>
+                                                <button class="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+                                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 font-mono text-sm">INV-2024-11-015</td>
+                                        <td class="px-6 py-4 font-semibold">$280.00</td>
+                                        <td class="px-6 py-4 text-sm">Nov 15, 2024</td>
+                                        <td class="px-6 py-4">
+                                            <span class="status-paid px-3 py-1 rounded-full text-xs font-medium">Paid</span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button class="border border-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+                                                <i data-lucide="download" class="w-4 h-4"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Spending Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-6">Monthly Spending</h3>
+                        <div class="h-80">
+                            <canvas id="spendingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Payment Summary -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Payment Summary</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Outstanding Balance</span>
+                                <span class="font-semibold text-red-600">$770.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Paid This Month</span>
+                                <span class="font-semibold text-green-600">$280.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Next Due Date</span>
+                                <span class="font-semibold">Dec 15, 2024</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-3 rounded-lg mt-4 hover:bg-blue-700 font-semibold">
+                            Pay All Outstanding
+                        </button>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Payment Methods</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
+                                <div class="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white">
+                                    <i data-lucide="credit-card"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">•••• 4532</div>
+                                    <div class="text-sm text-gray-600">Expires 12/26</div>
+                                </div>
+                                <span class="ml-auto bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Default</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
+                                <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center text-white">
+                                    <i data-lucide="building"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Bank Transfer</div>
+                                    <div class="text-sm text-gray-600">Vietcombank ••••1234</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-full border border-gray-300 text-gray-700 py-2 rounded-lg mt-4 hover:bg-gray-50">
+                            + Add Payment Method
+                        </button>
+                    </div>
+
+                    <!-- Spending Breakdown -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">This Month Breakdown</h4>
+                        <div class="h-48 mb-4">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-blue-600 rounded-full"></div>
+                                    Tuition
+                                </span>
+                                <span>$180</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-green-600 rounded-full"></div>
+                                    Materials
+                                </span>
+                                <span>$60</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-amber-600 rounded-full"></div>
+                                    Activities
+                                </span>
+                                <span>$40</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enrollment Page -->
+        <div id="enrollment" class="page">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Course Enrollment</h1>
+                <p class="text-gray-600">Get AI-powered course recommendations based on your goals</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Goals Form -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-6">Learning Goals</h3>
+                        <form class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Learning Objective</label>
+                                <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option>Improve Academic Performance</option>
+                                    <option>Prepare for University Entrance</option>
+                                    <option>Develop Specific Skills</option>
+                                    <option>Catch Up on Missed Topics</option>
+                                    <option>Advanced Learning</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Available Free Time (hours/week)</label>
+                                <input type="number" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 10" value="8">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                                <textarea class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" rows="4" placeholder="Any specific subjects, learning preferences, or challenges...">Emma struggles with Chemistry but excels in Mathematics. Looking for interactive learning methods.</textarea>
+                            </div>
+                            <button type="button" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 font-semibold flex items-center justify-center gap-2" onclick="runAIAdvisor()">
+                                <i data-lucide="brain"></i>
+                                Run AI Advisor
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- AI Recommendations -->
+                    <div id="aiRecommendations" class="bg-white rounded-xl shadow-sm border border-gray-200" style="display: none;">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold flex items-center gap-2">
+                                <i data-lucide="sparkles" class="text-amber-500"></i>
+                                AI Recommendations
+                            </h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Match Score</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rationale</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tuition</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="bg-green-50">
+                                        <td class="px-6 py-4">
+                                            <div class="font-semibold">Interactive Chemistry Lab</div>
+                                            <div class="text-sm text-gray-600">Advanced Chemistry with hands-on experiments</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-2">
+                                                <div class="text-2xl font-bold text-green-600">95%</div>
+                                                <i data-lucide="trending-up" class="text-green-600"></i>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">Perfect for visual learners struggling with Chemistry. Interactive approach matches learning style.</td>
+                                        <td class="px-6 py-4 font-semibold">$180/month</td>
+                                        <td class="px-6 py-4">
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700" onclick="addToCart('Interactive Chemistry Lab', '$180')">Add to Cart</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-blue-50">
+                                        <td class="px-6 py-4">
+                                            <div class="font-semibold">Advanced Mathematics</div>
+                                            <div class="text-sm text-gray-600">Calculus and Advanced Algebra</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-2">
+                                                <div class="text-2xl font-bold text-blue-600">88%</div>
+                                                <i data-lucide="trending-up" class="text-blue-600"></i>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">Builds on existing math strength. Prepares for university-level mathematics.</td>
+                                        <td class="px-6 py-4 font-semibold">$160/month</td>
+                                        <td class="px-6 py-4">
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700" onclick="addToCart('Advanced Mathematics', '$160')">Add to Cart</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4">
+                                            <div class="font-semibold">Study Skills Workshop</div>
+                                            <div class="text-sm text-gray-600">Time management and learning techniques</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-2">
+                                                <div class="text-2xl font-bold text-amber-600">75%</div>
+                                                <i data-lucide="minus" class="text-amber-600"></i>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">Complements academic courses. Helps with overall learning efficiency.</td>
+                                        <td class="px-6 py-4 font-semibold">$80/month</td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex gap-2">
+                                                <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Compare</button>
+                                                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700" onclick="addToCart('Study Skills Workshop', '$80')">Add to Cart</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Course Catalog -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-semibold">All Courses</h3>
+                                <div class="flex gap-4">
+                                    <select class="border border-gray-300 rounded-lg px-4 py-2">
+                                        <option>All Subjects</option>
+                                        <option>Mathematics</option>
+                                        <option>Science</option>
+                                        <option>Languages</option>
+                                        <option>Arts</option>
+                                    </select>
+                                    <select class="border border-gray-300 rounded-lg px-4 py-2">
+                                        <option>All Levels</option>
+                                        <option>Beginner</option>
+                                        <option>Intermediate</option>
+                                        <option>Advanced</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="course-card border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h4 class="text-lg font-semibold">Physics Fundamentals</h4>
+                                            <p class="text-gray-600 text-sm">Mechanics, Thermodynamics, Waves</p>
+                                        </div>
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">Intermediate</span>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="clock"></i>
+                                            3 hrs/week
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="users"></i>
+                                            12 students
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="star"></i>
+                                            4.8
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-2xl font-bold text-blue-600">$140/month</span>
+                                        <div class="flex gap-2">
+                                            <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Compare</button>
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700" onclick="addToCart('Physics Fundamentals', '$140')">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="course-card border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h4 class="text-lg font-semibold">English Literature</h4>
+                                            <p class="text-gray-600 text-sm">Classic & Modern Literature Analysis</p>
+                                        </div>
+                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Advanced</span>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="clock"></i>
+                                            2 hrs/week
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="users"></i>
+                                            8 students
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="star"></i>
+                                            4.9
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-2xl font-bold text-blue-600">$120/month</span>
+                                        <div class="flex gap-2">
+                                            <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-50">Compare</button>
+                                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700" onclick="addToCart('English Literature', '$120')">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Course Comparison -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Course Comparison</h4>
+                        <div class="text-center text-gray-500 py-8">
+                            <i data-lucide="scale" class="w-12 h-12 mx-auto mb-4 text-gray-300"></i>
+                            <p>Select courses to compare features and pricing</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Filters -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Quick Filters</h4>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm">Online Classes</span>
+                            </label>
+                            <label class="flex items-center gap-3">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm">Weekend Available</span>
+                            </label>
+                            <label class="flex items-center gap-3">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm">Small Class Size</span>
+                            </label>
+                            <label class="flex items-center gap-3">
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="text-sm">Trial Available</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cart" class="page">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
+                <p class="text-gray-600">Review your selected courses before checkout</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Cart Items -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-xl font-semibold">Cart Items (<span id="cartCount">3</span>)</h3>
+                        </div>
+                        <div id="cartItems" class="divide-y divide-gray-200">
+                            <div class="p-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="flask-conical" class="text-blue-600 w-8 h-8"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold">Interactive Chemistry Lab</h4>
+                                        <p class="text-gray-600 text-sm">Advanced Chemistry with hands-on experiments</p>
+                                        <div class="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                                            <span>Monday & Wednesday, 2:00-3:30 PM</span>
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Available</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-semibold">$180.00</div>
+                                        <div class="text-sm text-gray-600">per month</div>
+                                        <div class="text-sm text-green-600">10% discount applied</div>
+                                    </div>
+                                    <button class="text-red-600 hover:text-red-700 p-2" onclick="removeFromCart(this)">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="calculator" class="text-green-600 w-8 h-8"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold">Advanced Mathematics</h4>
+                                        <p class="text-gray-600 text-sm">Calculus and Advanced Algebra</p>
+                                        <div class="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                                            <span>Tuesday & Thursday, 4:00-5:30 PM</span>
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Available</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-semibold">$160.00</div>
+                                        <div class="text-sm text-gray-600">per month</div>
+                                    </div>
+                                    <button class="text-red-600 hover:text-red-700 p-2" onclick="removeFromCart(this)">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 bg-amber-100 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="brain" class="text-amber-600 w-8 h-8"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold">Study Skills Workshop</h4>
+                                        <p class="text-gray-600 text-sm">Time management and learning techniques</p>
+                                        <div class="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                                            <span>Saturday, 10:00-12:00 PM</span>
+                                            <span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs">2 spots left</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-semibold">$80.00</div>
+                                        <div class="text-sm text-gray-600">per month</div>
+                                    </div>
+                                    <button class="text-red-600 hover:text-red-700 p-2" onclick="removeFromCart(this)">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="space-y-6">
+                    <!-- Promo Code -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Promo Code</h4>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="Enter promo code" class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Apply</button>
+                        </div>
+                        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center gap-2 text-green-800">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                <span class="text-sm font-medium">NEWSTUDENT10 applied - 10% off first month</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Input -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Account Credits</h4>
+                        <div class="flex justify-between items-center mb-4">
+                            <span>Available Balance</span>
+                            <span class="text-2xl font-bold text-green-600">$25.00</span>
+                        </div>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" checked>
+                            <span class="text-sm">Apply $25.00 credit to this order</span>
+                        </label>
+                    </div>
+
+                    <!-- Order Total -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h4 class="text-lg font-semibold mb-4">Order Summary</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span>Subtotal</span>
+                                <span id="subtotal">$420.00</span>
+                            </div>
+                            <div class="flex justify-between text-green-600">
+                                <span>Discount (NEWSTUDENT10)</span>
+                                <span>-$18.00</span>
+                            </div>
+                            <div class="flex justify-between text-green-600">
+                                <span>Credit Applied</span>
+                                <span>-$25.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Tax (8%)</span>
+                                <span>$30.16</span>
+                            </div>
+                            <div class="border-t border-gray-200 pt-3">
+                                <div class="flex justify-between text-lg font-semibold">
+                                    <span>Grand Total</span>
+                                    <span id="grandTotal">$407.16</span>
+                                </div>
+                                <div class="text-sm text-gray-600 mt-1">Monthly recurring charge</div>
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 font-semibold flex items-center justify-center gap-2" onclick="proceedToCheckout()">
+                            <i data-lucide="credit-card"></i>
+                            Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Confirmation Page -->
+        <div id="confirmation" class="page">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="check-circle" class="w-12 h-12 text-green-600"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
+                    <p class="text-gray-600">Your enrollment has been successfully processed</p>
+                    <div class="mt-4">
+                        <span id="orderStatus" class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Success</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Order Details -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-6">Order Summary</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Order Number</span>
+                                <span class="font-mono font-semibold">#ORD-2024-12-001</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Transaction ID</span>
+                                <span class="font-mono">TXN-789456123</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Payment Method</span>
+                                <span>Visa •••• 4532</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Order Date</span>
+                                <span>December 18, 2024</span>
+                            </div>
+                            <div class="border-t border-gray-200 pt-4">
+                                <div class="flex justify-between text-lg font-semibold">
+                                    <span>Total Amount</span>
+                                    <span>$407.16</span>
+                                </div>
+                                <div class="text-sm text-gray-600">($25 credit applied)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enrolled Courses -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-semibold mb-6">Enrolled Courses</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
+                                <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                                    <i data-lucide="flask-conical"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Interactive Chemistry Lab</div>
+                                    <div class="text-sm text-gray-600">Starts: December 23, 2024</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
+                                <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white">
+                                    <i data-lucide="calculator"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Advanced Mathematics</div>
+                                    <div class="text-sm text-gray-600">Starts: December 24, 2024</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 bg-amber-50 rounded-lg">
+                                <div class="w-12 h-12 bg-amber-600 rounded-lg flex items-center justify-center text-white">
+                                    <i data-lucide="brain"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">Study Skills Workshop</div>
+                                    <div class="text-sm text-gray-600">Starts: December 21, 2024</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Demo Buttons -->
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mt-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Demo: Try Different Order Status</h3>
+                    <div class="flex gap-4 justify-center">
+                        <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onclick="setOrderStatus('success')">Success</button>
+                        <button class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700" onclick="setOrderStatus('processing')">Processing</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700" onclick="setOrderStatus('failed')">Failed</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                    <button class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-semibold flex items-center justify-center gap-2">
+                        <i data-lucide="download"></i>
+                        Download Receipt
+                    </button>
+                    <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 font-semibold flex items-center justify-center gap-2">
+                        <i data-lucide="home"></i>
+                        Go to Overview
+                    </button>
+                    <button class="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg hover:bg-gray-50 font-semibold flex items-center justify-center gap-2">
+                        <i data-lucide="calendar"></i>
+                        View Schedule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item, .mobile-nav-item');
+            const pages = document.querySelectorAll('.page');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-page');
+                    
+                    // Remove active class from all nav items
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    document.querySelectorAll('.mobile-nav-item').forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    if (this.classList.contains('nav-item')) {
+                        this.classList.add('active');
+                        // Also activate corresponding mobile nav
+                        document.querySelector(`.mobile-nav-item[data-page="${targetPage}"]`).classList.add('active');
+                    } else {
+                        this.classList.add('active');
+                        // Also activate corresponding desktop nav
+                        document.querySelector(`.nav-item[data-page="${targetPage}"]`).classList.add('active');
+                    }
+                    
+                    // Hide all pages
+                    pages.forEach(page => page.classList.remove('active'));
+                    
+                    // Show target page
+                    document.getElementById(targetPage).classList.add('active');
+                });
+            });
+
+            // Initialize charts
+            initializeCharts();
+        });
+
+        // Chart initialization
+        function initializeCharts() {
+            // Spending Line Chart
+            const spendingCtx = document.getElementById('spendingChart');
+            if (spendingCtx) {
+                new Chart(spendingCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'Monthly Spending',
+                            data: [280, 320, 280, 380, 420, 380, 340, 360, 400, 380, 280, 420],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Donut Chart
+            const donutCtx = document.getElementById('donutChart');
+            if (donutCtx) {
+                new Chart(donutCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Tuition', 'Materials', 'Activities'],
+                        datasets: [{
+                            data: [180, 60, 40],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // AI Advisor functionality
+        function runAIAdvisor() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Analyzing...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                // Show recommendations
+                document.getElementById('aiRecommendations').style.display = 'block';
+                document.getElementById('aiRecommendations').scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset button
+                button.innerHTML = originalText;
+                button.disabled = false;
+                lucide.createIcons();
+            }, 2000);
+        }
+
+        // Cart functionality
+        let cartItems = 3;
+
+        function addToCart(courseName, price) {
+            cartItems++;
+            updateCartCount();
+            
+            // Show success message
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Added!';
+            button.classList.add('bg-green-600', 'hover:bg-green-700');
+            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }, 1500);
+        }
+
+        function removeFromCart(button) {
+            const cartItem = button.closest('.p-6');
+            cartItem.style.opacity = '0.5';
+            cartItem.style.transform = 'translateX(-20px)';
+            
+            setTimeout(() => {
+                cartItem.remove();
+                cartItems--;
+                updateCartCount();
+                updateCartTotals();
+            }, 300);
+        }
+
+        function updateCartCount() {
+            document.querySelectorAll('[class*="bg-red-500"]').forEach(badge => {
+                if (badge.textContent.trim() === '3' || badge.textContent.trim() === cartItems.toString()) {
+                    badge.textContent = cartItems;
+                }
+            });
+            
+            const cartCountElement = document.getElementById('cartCount');
+            if (cartCountElement) {
+                cartCountElement.textContent = cartItems;
+            }
+        }
+
+        function updateCartTotals() {
+            // Recalculate totals based on remaining items
+            const remainingItems = document.querySelectorAll('#cartItems .p-6').length;
+            const basePrice = remainingItems * 140; // Average price
+            const discount = basePrice * 0.1;
+            const credit = 25;
+            const tax = (basePrice - discount - credit) * 0.08;
+            const total = basePrice - discount - credit + tax;
+            
+            document.getElementById('subtotal').textContent = '$' + basePrice.toFixed(2);
+            document.getElementById('grandTotal').textContent = '$' + total.toFixed(2);
+        }
+
+        function proceedToCheckout() {
+            // Navigate to confirmation page
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelectorAll('.mobile-nav-item').forEach(nav => nav.classList.remove('active'));
+            document.querySelector('.nav-item[data-page="confirmation"]').classList.add('active');
+            document.querySelector('.mobile-nav-item[data-page="confirmation"]').classList.add('active');
+            
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('confirmation').classList.add('active');
+        }
+
+        // Order status functionality
+        function setOrderStatus(status) {
+            const statusElement = document.getElementById('orderStatus');
+            const title = document.querySelector('#confirmation h1');
+            const icon = document.querySelector('#confirmation .w-20 i');
+            const iconContainer = document.querySelector('#confirmation .w-20');
+            
+            switch(status) {
+                case 'success':
+                    statusElement.textContent = 'Success';
+                    statusElement.className = 'bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium';
+                    title.textContent = 'Order Confirmed!';
+                    iconContainer.className = 'w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                    icon.setAttribute('data-lucide', 'check-circle');
+                    icon.className = 'w-12 h-12 text-green-600';
+                    break;
+                case 'processing':
+                    statusElement.textContent = 'Processing';
+                    statusElement.className = 'bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium';
+                    title.textContent = 'Order Processing...';
+                    iconContainer.className = 'w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                    icon.setAttribute('data-lucide', 'clock');
+                    icon.className = 'w-12 h-12 text-amber-600';
+                    break;
+                case 'failed':
+                    statusElement.textContent = 'Failed';
+                    statusElement.className = 'bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium';
+                    title.textContent = 'Order Failed';
+                    iconContainer.className = 'w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                    icon.setAttribute('data-lucide', 'x-circle');
+                    icon.className = 'w-12 h-12 text-red-600';
+                    break;
+            }
+            
+            lucide.createIcons();
+        }
+
+        // Show all paid state
+        function showAllPaid() {
+            document.getElementById('allPaidState').style.display = 'block';
+            document.querySelector('#finance .grid').style.display = 'none';
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981720c846bffe13',t:'MTc1ODI2NDQwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
