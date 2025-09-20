@@ -638,7 +638,7 @@
         </div>
         
         <div class="space-y-2">
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors active" onclick="showPage('overview')" data-page="overview">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors " onclick="showPage('overview')" data-page="overview">
                 <i data-lucide="home"></i>
                 <span>Overview / Tổng quan</span>
             </a>
@@ -650,11 +650,11 @@
                 <i data-lucide="book-open"></i>
                 <span>Learning / Học tập</span>
             </a>
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" onclick="showPage('schedule')" data-page="schedule">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors  " onclick="showPage('schedule')" data-page="schedule">
                 <i data-lucide="calendar"></i>
                 <span>Schedule / Lịch học</span>
             </a>
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors " onclick="showPage('notifications')" data-page="notifications">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors active " onclick="showPage('notifications')" data-page="notifications">
                 <i data-lucide="bell"></i>
                 <span>Notifications / Thông báo</span>
             </a>
@@ -786,7 +786,7 @@
     <!-- Main Content -->
     <main class="lg:ml-72 p-4 lg:p-8 pb-20 lg:pb-8">
         <!-- Overview Page -->
-        <div id="overview" class="page hidden-page active">
+        <div id="overview" class="page hidden-page">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, Mai! / Chào mừng trở lại!</h1>
                 <p class="text-gray-600">Here's what's happening with Emma's education</p>
@@ -1236,7 +1236,7 @@
         </div>
 
         <!-- Schedule Page -->
-        <div id="schedule" class="page">
+        <div id="schedule" class="page ">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Schedule / Lịch học</h1>
                 <p class="text-gray-600">Emma's class schedule and upcoming events</p>
@@ -1387,7 +1387,7 @@
         </div>
 
         <!-- Notifications Page -->
-        <div id="notifications" class="page">
+        <div id="notifications" class="page  active ">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Notifications / Thông báo</h1>
                 <p class="text-gray-600">Stay updated with Emma's academic activities</p>
