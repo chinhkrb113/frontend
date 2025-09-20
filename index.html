@@ -638,7 +638,7 @@
         </div>
         
         <div class="space-y-2">
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors" onclick="showPage('overview')" data-page="overview">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors active" onclick="showPage('overview')" data-page="overview">
                 <i data-lucide="home"></i>
                 <span>Overview / Tổng quan</span>
             </a>
@@ -646,7 +646,7 @@
                 <i data-lucide="users"></i>
                 <span>Family / Gia đình</span>
             </a>
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors active " onclick="showPage('learning')" data-page="learning">
+            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-blue-600 hover:text-white transition-colors  " onclick="showPage('learning')" data-page="learning">
                 <i data-lucide="book-open"></i>
                 <span>Learning / Học tập</span>
             </a>
@@ -786,7 +786,7 @@
     <!-- Main Content -->
     <main class="lg:ml-72 p-4 lg:p-8 pb-20 lg:pb-8">
         <!-- Overview Page -->
-        <div id="overview" class="page active hidden-page">
+        <div id="overview" class="page hidden-page active">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, Mai! / Chào mừng trở lại!</h1>
                 <p class="text-gray-600">Here's what's happening with Emma's education</p>
@@ -964,7 +964,7 @@
         </div>
 
         <!-- Family Page -->
-        <div id="family" class="page active">
+        <div id="family" class="page hidden-page">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Family Management / Quản lý gia đình</h1>
                 <p class="text-gray-600">Manage your children's profiles and switch between accounts</p>
@@ -1074,7 +1074,7 @@
         </div>
 
         <!-- Learning Pathway Page -->
-        <div id="learning" class="page">
+        <div id="learning" class="page hidden-page">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Learning Pathway / Lộ trình học tập</h1>
                 <p class="text-gray-600">Emma's academic progress and AI-powered insights</p>
@@ -1387,7 +1387,7 @@
         </div>
 
         <!-- Notifications Page -->
-        <div id="notifications" class="page active">
+        <div id="notifications" class="page">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Notifications / Thông báo</h1>
                 <p class="text-gray-600">Stay updated with Emma's academic activities</p>
@@ -2497,7 +2497,7 @@
         </div>
 
         <!-- Page 2: Help Center -->
-        <div id="help-center-page" class="page">
+        <div id="help-center-page" class="page hidden-page">
             <div class="container">
                 <div class="page-header">
                     <h1 class="h1 page-title">Help Center</h1>
@@ -2733,7 +2733,7 @@
         </div>
 
         <!-- Page 3: Referral -->
-        <div id="referral-page" class="page">
+        <div id="referral-page" class="page hidden-page">
             <div class="container">
                 <div class="page-header">
                     <h1 class="h1 page-title">Referral Program</h1>
@@ -2929,7 +2929,7 @@
         </div>
 
         <!-- Page 4: Profile -->
-        <div id="profile-page" class="page">
+        <div id="profile-page" class="page hidden-page">
             <div class="container">
                 <div class="page-header">
                     <h1 class="h1 page-title">Profile Settings</h1>
